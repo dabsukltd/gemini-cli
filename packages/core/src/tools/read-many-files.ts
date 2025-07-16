@@ -8,7 +8,7 @@ import { BaseTool, ToolResult } from './tools.js';
 import { SchemaValidator } from '../utils/schemaValidator.js';
 import { getErrorMessage } from '../utils/errors.js';
 import * as path from 'path';
-import { glob } from 'glob';
+import fg from 'fast-glob';
 import { getCurrentGeminiMdFilename } from './memoryTool.js';
 import {
   detectFileType,
@@ -283,14 +283,14 @@ Use this tool when the user's query implies needing the content of several files
     }
 
     try {
-      const entries = await glob(searchPatterns, {
+      const entries = await fg(searchPatterns, {
         cwd: this.config.getTargetDir(),
         ignore: effectiveExcludes,
-        nodir: true,
+        onlyFiles: true,
         dot: true,
         absolute: true,
-        nocase: true,
-        signal,
+        caseSensitiveMatch: false,
+        suppressErrors: true,
       });
 
       const filteredEntries = respectGitIgnore
