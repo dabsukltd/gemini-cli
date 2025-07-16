@@ -30,7 +30,10 @@ export async function reportError(
 ): Promise<void> {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const reportFileName = `gemini-client-error-${type}-${timestamp}.json`;
-  const reportPath = path.join(os.tmpdir(), reportFileName);
+  const reportPath = path
+    .join(os.tmpdir(), reportFileName)
+    .split(path.sep)
+    .join('/');
 
   let errorToReport: { message: string; stack?: string };
   if (error instanceof Error) {

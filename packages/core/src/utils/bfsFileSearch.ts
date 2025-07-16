@@ -78,7 +78,8 @@ export async function bfsFileSearch(
           queue.push(fullPath);
         }
       } else if (entry.isFile() && entry.name === fileName) {
-        foundFiles.push(fullPath);
+        // Normalize path separators to forward slashes for cross-platform consistency
+        foundFiles.push(fullPath.split(path.sep).join('/'));
       }
     }
   }
