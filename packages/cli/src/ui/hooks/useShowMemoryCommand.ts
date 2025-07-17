@@ -5,7 +5,7 @@
  */
 
 import { Message, MessageType } from '../types.js';
-import { Config } from '@google/gemini-cli-core';
+import { Config } from '@phoenix-ignite/phoenix-cli-core';
 import { LoadedSettings } from '../../config/settings.js';
 
 export function createShowMemoryAction(
@@ -66,8 +66,8 @@ export function createShowMemoryAction(
         type: MessageType.INFO,
         content:
           fileCount > 0
-            ? 'Hierarchical memory (GEMINI.md or other context files) is loaded but content is empty.'
-            : 'No hierarchical memory (GEMINI.md or other context files) is currently loaded.',
+            ? 'Hierarchical memory (PHOENIX.md or other context files) is loaded but content is empty.'
+            : 'No hierarchical memory (PHOENIX.md or other context files) is currently loaded.',
         timestamp: new Date(),
       });
     }

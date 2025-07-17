@@ -9,7 +9,7 @@ import { SchemaValidator } from '../utils/schemaValidator.js';
 import { getErrorMessage } from '../utils/errors.js';
 import * as path from 'path';
 import fg from 'fast-glob';
-import { getCurrentGeminiMdFilename } from './memoryTool.js';
+import { getCurrentPhoenixMdFilename } from './memoryTool.js';
 import {
   detectFileType,
   processSingleFileContent,
@@ -109,7 +109,7 @@ const DEFAULT_EXCLUDES: string[] = [
   '**/*.odp',
   '**/*.DS_Store',
   '**/.env',
-  `**/${getCurrentGeminiMdFilename()}`,
+  `**/${getCurrentPhoenixMdFilename()}`,
 ];
 
 const DEFAULT_OUTPUT_SEPARATOR_FORMAT = '--- {filePath} ---';
@@ -126,6 +126,7 @@ export class ReadManyFilesTool extends BaseTool<
   static readonly Name: string = 'read_many_files';
 
   private readonly geminiIgnorePatterns: string[] = [];
+  private readonly phoenixIgnorePatterns: string[] = [];
 
   constructor(private config: Config) {
     const parameterSchema: Schema = {
@@ -198,7 +199,7 @@ This tool is useful when you need to understand or analyze a collection of files
 Use this tool when the user's query implies needing the content of several files simultaneously for context, analysis, or summarization. For text files, it uses default UTF-8 encoding and a '--- {filePath} ---' separator between file contents. Ensure paths are relative to the target directory. Glob patterns like 'src/**/*.js' are supported. Avoid using for single files if a more specific single-file reading tool is available, unless the user specifically requests to process a list containing just one file via this tool. Other binary files (not explicitly requested as image/PDF) are generally skipped. Default excludes apply to common non-text files (except for explicitly requested images/PDFs) and large dependency directories unless 'useDefaultExcludes' is false.`,
       parameterSchema,
     );
-    this.geminiIgnorePatterns = config
+    this.phoenixIgnorePatterns = config
       .getFileService()
       .getGeminiIgnorePatterns();
   }
@@ -221,18 +222,18 @@ Use this tool when the user's query implies needing the content of several files
 
     const finalExclusionPatternsForDescription: string[] =
       paramUseDefaultExcludes
-        ? [...DEFAULT_EXCLUDES, ...paramExcludes, ...this.geminiIgnorePatterns]
-        : [...paramExcludes, ...this.geminiIgnorePatterns];
+        ? [...DEFAULT_EXCLUDES, ...paramExcludes, ...this.phoenixIgnorePatterns]
+        : [...paramExcludes, ...this.phoenixIgnorePatterns];
 
     let excludeDesc = `Excluding: ${finalExclusionPatternsForDescription.length > 0 ? `patterns like \`${finalExclusionPatternsForDescription.slice(0, 2).join('`, `')}${finalExclusionPatternsForDescription.length > 2 ? '...`' : '`'}` : 'none specified'}`;
 
-    // Add a note if .geminiignore patterns contributed to the final list of exclusions
-    if (this.geminiIgnorePatterns.length > 0) {
-      const geminiPatternsInEffect = this.geminiIgnorePatterns.filter((p) =>
+    // Add a note if .phoenixignore patterns contributed to the final list of exclusions
+    if (this.phoenixIgnorePatterns.length > 0) {
+      const geminiPatternsInEffect = this.phoenixIgnorePatterns.filter((p) =>
         finalExclusionPatternsForDescription.includes(p),
       ).length;
       if (geminiPatternsInEffect > 0) {
-        excludeDesc += ` (includes ${geminiPatternsInEffect} from .geminiignore)`;
+        excludeDesc += ` (includes ${geminiPatternsInEffect} from .phoenixignore)`;
       }
     }
 
@@ -271,8 +272,8 @@ Use this tool when the user's query implies needing the content of several files
     const contentParts: PartListUnion = [];
 
     const effectiveExcludes = useDefaultExcludes
-      ? [...DEFAULT_EXCLUDES, ...exclude, ...this.geminiIgnorePatterns]
-      : [...exclude, ...this.geminiIgnorePatterns];
+      ? [...DEFAULT_EXCLUDES, ...exclude, ...this.phoenixIgnorePatterns]
+      : [...exclude, ...this.phoenixIgnorePatterns];
 
     const searchPatterns = [...inputPatterns, ...include];
     if (searchPatterns.length === 0) {

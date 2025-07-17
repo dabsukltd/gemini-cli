@@ -12,7 +12,7 @@ import {
   getErrorMessage,
   isNodeError,
   unescapePath,
-} from '@google/gemini-cli-core';
+} from '@phoenix-ignite/phoenix-cli-core';
 import {
   HistoryItem,
   IndividualToolCallDisplay,

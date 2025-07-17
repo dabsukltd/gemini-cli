@@ -44,7 +44,7 @@ describe('oauth2', () => {
 
   beforeEach(() => {
     tempHomeDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'gemini-cli-test-home-'),
+      path.join(os.tmpdir(), 'phoenix-cli-test-home-'),
     );
     (os.homedir as Mock).mockReturnValue(tempHomeDir);
   });
@@ -158,7 +158,7 @@ describe('oauth2', () => {
     // Verify Google Account was cached
     const googleAccountPath = path.join(
       tempHomeDir,
-      '.gemini',
+      '.phoenix',
       'google_accounts.json',
     );
     expect(fs.existsSync(googleAccountPath)).toBe(true);
@@ -283,7 +283,7 @@ describe('oauth2', () => {
       await getOauthClient(AuthType.LOGIN_WITH_GOOGLE, mockConfig);
 
       expect(fs.promises.readFile).toHaveBeenCalledWith(
-        '/user/home/.gemini/oauth_creds.json',
+        '/user/home/.phoenix/oauth_creds.json',
         'utf-8',
       );
       expect(mockClient.setCredentials).toHaveBeenCalledWith(cachedCreds);

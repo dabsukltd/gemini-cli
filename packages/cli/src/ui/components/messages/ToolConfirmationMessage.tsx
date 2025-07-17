@@ -14,7 +14,7 @@ import {
   ToolExecuteConfirmationDetails,
   ToolMcpConfirmationDetails,
   Config,
-} from '@google/gemini-cli-core';
+} from '@phoenix-ignite/phoenix-cli-core';
 import {
   RadioButtonSelect,
   RadioSelectItem,

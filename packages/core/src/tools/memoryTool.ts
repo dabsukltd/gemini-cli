@@ -46,15 +46,15 @@ Do NOT use this tool:
 - \`fact\` (string, required): The specific fact or piece of information to remember. This should be a clear, self-contained statement. For example, if the user says "My favorite color is blue", the fact would be "My favorite color is blue".
 `;
 
-export const GEMINI_CONFIG_DIR = '.gemini';
-export const DEFAULT_CONTEXT_FILENAME = 'GEMINI.md';
+export const PHOENIX_CONFIG_DIR = '.phoenix';
+export const DEFAULT_CONTEXT_FILENAME = 'PHOENIX.md';
 export const MEMORY_SECTION_HEADER = '## Gemini Added Memories';
 
-// This variable will hold the currently configured filename for GEMINI.md context files.
-// It defaults to DEFAULT_CONTEXT_FILENAME but can be overridden by setGeminiMdFilename.
+// This variable will hold the currently configured filename for PHOENIX.md context files.
+// It defaults to DEFAULT_CONTEXT_FILENAME but can be overridden by setPhoenixMdFilename.
 let currentGeminiMdFilename: string | string[] = DEFAULT_CONTEXT_FILENAME;
 
-export function setGeminiMdFilename(newFilename: string | string[]): void {
+export function setPhoenixMdFilename(newFilename: string | string[]): void {
   if (Array.isArray(newFilename)) {
     if (newFilename.length > 0) {
       currentGeminiMdFilename = newFilename.map((name) => name.trim());
@@ -64,14 +64,14 @@ export function setGeminiMdFilename(newFilename: string | string[]): void {
   }
 }
 
-export function getCurrentGeminiMdFilename(): string {
+export function getCurrentPhoenixMdFilename(): string {
   if (Array.isArray(currentGeminiMdFilename)) {
     return currentGeminiMdFilename[0];
   }
   return currentGeminiMdFilename;
 }
 
-export function getAllGeminiMdFilenames(): string[] {
+export function getAllPhoenixMdFilenames(): string[] {
   if (Array.isArray(currentGeminiMdFilename)) {
     return currentGeminiMdFilename;
   }
@@ -83,7 +83,7 @@ interface SaveMemoryParams {
 }
 
 function getGlobalMemoryFilePath(): string {
-  return path.join(homedir(), GEMINI_CONFIG_DIR, getCurrentGeminiMdFilename());
+  return path.join(homedir(), PHOENIX_CONFIG_DIR, getCurrentPhoenixMdFilename());
 }
 
 /**

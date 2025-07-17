@@ -7,7 +7,7 @@
 import React from 'react';
 import { Box, Text } from 'ink';
 import { Colors } from '../colors.js';
-import { type Config } from '@google/gemini-cli-core';
+import { type Config } from '@phoenix-ignite/phoenix-cli-core';
 
 interface TipsProps {
   config: Config;
@@ -28,7 +28,7 @@ export const Tips: React.FC<TipsProps> = ({ config }) => {
         <Text color={Colors.Foreground}>
           3. Create{' '}
           <Text bold color={Colors.AccentPurple}>
-            GEMINI.md
+            PHOENIX.md
           </Text>{' '}
           files to customize your interactions with Gemini.
         </Text>

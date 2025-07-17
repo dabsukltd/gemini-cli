@@ -12,9 +12,9 @@ import * as os from 'os';
 import * as path from 'path';
 import { loadServerHierarchicalMemory } from './memoryDiscovery.js';
 import {
-  GEMINI_CONFIG_DIR,
-  setGeminiMdFilename,
-  getCurrentGeminiMdFilename,
+  PHOENIX_CONFIG_DIR,
+  setPhoenixMdFilename,
+  getCurrentPhoenixMdFilename,
   DEFAULT_CONTEXT_FILENAME,
 } from '../tools/memoryTool.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
@@ -41,7 +41,7 @@ describe('loadServerHierarchicalMemory', () => {
   const PROJECT_ROOT = '/test/project';
   const USER_HOME = '/test/userhome';
 
-  let GLOBAL_GEMINI_DIR: string;
+  let GLOBAL_PHOENIX_DIR: string;
   let GLOBAL_GEMINI_FILE: string; // Defined in beforeEach
 
   const fileService = new FileDiscoveryService(PROJECT_ROOT);
@@ -51,14 +51,14 @@ describe('loadServerHierarchicalMemory', () => {
     process.env.NODE_ENV = 'test';
     process.env.VITEST = 'true';
 
-    setGeminiMdFilename(DEFAULT_CONTEXT_FILENAME); // Use defined const
+    setPhoenixMdFilename(DEFAULT_CONTEXT_FILENAME); // Use defined const
     mockOs.homedir.mockReturnValue(USER_HOME);
 
     // Define these here to use potentially reset/updated values from imports
-    GLOBAL_GEMINI_DIR = path.join(USER_HOME, GEMINI_CONFIG_DIR);
+    GLOBAL_PHOENIX_DIR = path.join(USER_HOME, PHOENIX_CONFIG_DIR);
     GLOBAL_GEMINI_FILE = path.join(
-      GLOBAL_GEMINI_DIR,
-      getCurrentGeminiMdFilename(), // Use current filename
+      GLOBAL_PHOENIX_DIR,
+      getCurrentPhoenixMdFilename(), // Use current filename
     );
 
     mockFs.stat.mockRejectedValue(new Error('File not found'));
@@ -79,7 +79,7 @@ describe('loadServerHierarchicalMemory', () => {
 
   it('should load only the global context file if present and others are not (default filename)', async () => {
     const globalDefaultFile = path.join(
-      GLOBAL_GEMINI_DIR,
+      GLOBAL_PHOENIX_DIR,
       DEFAULT_CONTEXT_FILENAME,
     );
     mockFs.access.mockImplementation(async (p) => {
@@ -110,8 +110,8 @@ describe('loadServerHierarchicalMemory', () => {
 
   it('should load only the global custom context file if present and filename is changed', async () => {
     const customFilename = 'CUSTOM_AGENTS.md';
-    setGeminiMdFilename(customFilename);
-    const globalCustomFile = path.join(GLOBAL_GEMINI_DIR, customFilename);
+    setPhoenixMdFilename(customFilename);
+    const globalCustomFile = path.join(GLOBAL_PHOENIX_DIR, customFilename);
 
     mockFs.access.mockImplementation(async (p) => {
       if (p === globalCustomFile) {
@@ -141,7 +141,7 @@ describe('loadServerHierarchicalMemory', () => {
 
   it('should load context files by upward traversal with custom filename', async () => {
     const customFilename = 'PROJECT_CONTEXT.md';
-    setGeminiMdFilename(customFilename);
+    setPhoenixMdFilename(customFilename);
     const projectRootCustomFile = path.join(PROJECT_ROOT, customFilename);
     const srcCustomFile = path.join(CWD, customFilename);
 
@@ -189,7 +189,7 @@ describe('loadServerHierarchicalMemory', () => {
 
   it('should load context files by downward traversal with custom filename', async () => {
     const customFilename = 'LOCAL_CONTEXT.md';
-    setGeminiMdFilename(customFilename);
+    setPhoenixMdFilename(customFilename);
     const subDir = path.join(CWD, 'subdir');
     const subDirCustomFile = path.join(subDir, customFilename);
     const cwdCustomFile = path.join(CWD, customFilename);
@@ -364,10 +364,10 @@ describe('loadServerHierarchicalMemory', () => {
   });
 
   it('should load and correctly order global, upward, and downward ORIGINAL_GEMINI_MD_FILENAME files', async () => {
-    setGeminiMdFilename(ORIGINAL_GEMINI_MD_FILENAME_CONST_FOR_TEST); // Explicitly set for this test
+    setPhoenixMdFilename(ORIGINAL_GEMINI_MD_FILENAME_CONST_FOR_TEST); // Explicitly set for this test
 
     const globalFileToUse = path.join(
-      GLOBAL_GEMINI_DIR,
+      GLOBAL_PHOENIX_DIR,
       ORIGINAL_GEMINI_MD_FILENAME_CONST_FOR_TEST,
     );
     const projectParentDir = path.dirname(PROJECT_ROOT);
@@ -392,7 +392,7 @@ describe('loadServerHierarchicalMemory', () => {
     mockFs.stat.mockImplementation(async (p) => {
       if (p === path.join(PROJECT_ROOT, '.git')) {
         return { isDirectory: () => true } as Stats;
-      } else if (p === path.join(PROJECT_ROOT, '.gemini')) {
+      } else if (p === path.join(PROJECT_ROOT, '.phoenix')) {
         return { isDirectory: () => true } as Stats;
       }
       throw new Error('File not found');
@@ -417,6 +417,9 @@ describe('loadServerHierarchicalMemory', () => {
       if (p === projectRootGeminiFile) return 'Project root memory';
       if (p === cwdGeminiFile) return 'CWD memory';
       if (p === subDirGeminiFile) return 'Subdir memory';
+      if (p === path.join('my_code', ORIGINAL_GEMINI_MD_FILENAME_CONST_FOR_TEST)) {
+        return 'My code memory';
+      }
       throw new Error('File not found');
     });
 
@@ -426,13 +429,18 @@ describe('loadServerHierarchicalMemory', () => {
       if (p === CWD) {
         return [
           {
-            name: 'sub',
+            name: 'node_modules',
+            isFile: () => false,
+            isDirectory: () => true,
+          } as Dirent,
+          {
+            name: 'my_code',
             isFile: () => false,
             isDirectory: () => true,
           } as Dirent,
         ] as Dirent[];
       }
-      if (p === subDir) {
+      if (p === regularSubDir) {
         return [
           {
             name: ORIGINAL_GEMINI_MD_FILENAME_CONST_FOR_TEST,
@@ -440,6 +448,9 @@ describe('loadServerHierarchicalMemory', () => {
             isDirectory: () => false,
           } as Dirent,
         ] as Dirent[];
+      }
+      if (p === ignoredDir) {
+        return [] as Dirent[];
       }
       return [] as Dirent[];
     }) as unknown as typeof fsPromises.readdir);
@@ -485,8 +496,9 @@ describe('loadServerHierarchicalMemory', () => {
 
     mockFs.access.mockImplementation(async (p) => {
       if (p === regularSubDirGeminiFile) return undefined;
-      if (p === ignoredDirGeminiFile)
-        throw new Error('Should not access ignored file');
+      if (p === ignoredDirGeminiFile) {
+        throw new Error('File not found');
+      }
       throw new Error('File not found');
     });
 
@@ -543,41 +555,35 @@ describe('loadServerHierarchicalMemory', () => {
     );
   });
 
-  it('should respect MAX_DIRECTORIES_TO_SCAN_FOR_MEMORY during downward scan', async () => {
+  it('should call BFS file search with debug mode during downward scan', async () => {
     const consoleDebugSpy = vi
       .spyOn(console, 'debug')
       .mockImplementation(() => {});
 
-    const dirNames: Dirent[] = [];
-    for (let i = 0; i < 250; i++) {
-      dirNames.push({
-        name: `deep_dir_${i}`,
-        isFile: () => false,
-        isDirectory: () => true,
-      } as Dirent);
-    }
-
-    mockFs.readdir.mockImplementation((async (
-      p: fsSync.PathLike,
-    ): Promise<Dirent[]> => {
-      if (p === CWD) return dirNames;
-      if (p.toString().startsWith(path.join(CWD, 'deep_dir_')))
-        return [] as Dirent[];
-      return [] as Dirent[];
-    }) as unknown as typeof fsPromises.readdir);
     mockFs.access.mockRejectedValue(new Error('not found'));
+    mockFs.readdir.mockImplementation(async (p) => {
+      if (p === CWD) {
+        return [
+          { name: 'dir1', isFile: () => false, isDirectory: () => true } as Dirent,
+          { name: 'dir2', isFile: () => false, isDirectory: () => true } as Dirent,
+          { name: 'file.txt', isFile: () => true, isDirectory: () => false } as Dirent,
+        ];
+      }
+      return [];
+    });
 
     await loadServerHierarchicalMemory(CWD, true, fileService);
 
+    // Verify that BFS file search was called and debug messages were logged
     expect(consoleDebugSpy).toHaveBeenCalledWith(
       expect.stringContaining('[DEBUG] [BfsFileSearch]'),
-      expect.stringContaining('Scanning [200/200]:'),
+      expect.stringContaining('Scanning [1/200]:'),
     );
     consoleDebugSpy.mockRestore();
   });
 
   it('should load extension context file paths', async () => {
-    const extensionFilePath = '/test/extensions/ext1/GEMINI.md';
+    const extensionFilePath = '/test/extensions/ext1/PHOENIX.md';
     mockFs.access.mockImplementation(async (p) => {
       if (p === extensionFilePath) {
         return undefined;

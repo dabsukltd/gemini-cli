@@ -6,7 +6,7 @@
 
 import { Content } from '@google/genai';
 import { HistoryItemWithoutId } from '../types.js';
-import { Config, GitService, Logger } from '@google/gemini-cli-core';
+import { Config, GitService, Logger } from '@phoenix-ignite/phoenix-cli-core';
 import { LoadedSettings } from '../../config/settings.js';
 import { UseHistoryManagerReturn } from '../hooks/useHistoryManager.js';
 import { SessionStatsState } from '../contexts/SessionContext.js';

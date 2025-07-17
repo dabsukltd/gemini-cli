@@ -127,7 +127,7 @@ export async function startIDEServer(context: vscode.ExtensionContext) {
     if (address && typeof address !== 'string') {
       const port = address.port;
       context.environmentVariableCollection.replace(
-        'GEMINI_CLI_IDE_SERVER_PORT',
+        'PHOENIX_CLI_IDE_SERVER_PORT',
         port.toString(),
       );
       console.log(`MCP Streamable HTTP Server listening on port ${port}`);
@@ -144,7 +144,7 @@ export async function startIDEServer(context: vscode.ExtensionContext) {
 const createMcpServer = () => {
   const server = new McpServer(
     {
-      name: 'gemini-cli-companion-mcp-server',
+      name: 'phoenix-cli-companion-mcp-server',
       version: '1.0.0',
     },
     { capabilities: { logging: {} } },

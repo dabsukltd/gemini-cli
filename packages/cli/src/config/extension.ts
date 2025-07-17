@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MCPServerConfig } from '@google/gemini-cli-core';
+import { MCPServerConfig } from '@phoenix-ignite/phoenix-cli-core';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 
-export const EXTENSIONS_DIRECTORY_NAME = path.join('.gemini', 'extensions');
+export const EXTENSIONS_DIRECTORY_NAME = path.join('.phoenix', 'extensions');
 export const EXTENSIONS_CONFIG_FILENAME = 'gemini-extension.json';
 
 export interface Extension {
@@ -106,7 +106,7 @@ function loadExtension(extensionDir: string): Extension | null {
 
 function getContextFileNames(config: ExtensionConfig): string[] {
   if (!config.contextFileName) {
-    return ['GEMINI.md'];
+    return ['PHOENIX.md'];
   } else if (!Array.isArray(config.contextFileName)) {
     return [config.contextFileName];
   }

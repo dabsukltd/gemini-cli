@@ -1,95 +1,100 @@
-# Gemini CLI
+# Phoenix CLI
 
-[![Gemini CLI CI](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml)
+[![Phoenix CLI](https://img.shields.io/badge/Phoenix-CLI-orange.svg)](https://github.com/phoenix-ignite/phoenix-cli)
 
-![Gemini CLI Screenshot](./docs/assets/gemini-screenshot.png)
+![Phoenix CLI Screenshot](./docs/assets/phoenix-screenshot.png)
 
-This repository contains the Gemini CLI, a command-line AI workflow tool that connects to your
-tools, understands your code and accelerates your workflows.
+**Phoenix CLI** - Reborn from memory issues with optimized performance and cross-platform compatibility.
 
-With the Gemini CLI you can:
+This is an enhanced fork of [Google's Gemini CLI](https://github.com/google-gemini/gemini-cli) with personal fixes and improvements, focusing on:
 
-- Query and edit large codebases in and beyond Gemini's 1M token context window.
-- Generate new apps from PDFs or sketches, using Gemini's multimodal capabilities.
-- Automate operational tasks, like querying pull requests or handling complex rebases.
-- Use tools and MCP servers to connect new capabilities, including [media generation with Imagen,
-  Veo or Lyria](https://github.com/GoogleCloudPlatform/vertex-ai-creative-studio/tree/main/experiments/mcp-genmedia)
-- Ground your queries with the [Google Search](https://ai.google.dev/gemini-api/docs/grounding)
-  tool, built in to Gemini.
+✨ **Key Improvements:**
+- 🚀 **Memory Optimization** - Fixed memory allocation issues for better performance
+- 🔧 **Cross-Platform Compatibility** - Enhanced Windows, macOS, and Linux support
+- ⚡ **Performance Enhancements** - Streamlined codebase for faster execution
+- 🛠️ **Bug Fixes** - Resolved critical issues from the original repository
+- 🎯 **Simplified Experience** - Cleaner interface without unnecessary complexity
+
+**Core Features:**
+- Query and edit large codebases with improved memory handling
+- Generate applications from PDFs or sketches using multimodal AI
+- Automate operational tasks with enhanced reliability
+- Connect tools and MCP servers with better stability
+- Ground queries with integrated search capabilities
 
 ## Quickstart
 
 1. **Prerequisites:** Ensure you have [Node.js version 20](https://nodejs.org/en/download) or higher installed.
-2. **Run the CLI:** Execute the following command in your terminal:
+2. **Clone and Install:**
 
    ```bash
-   npx https://github.com/google-gemini/gemini-cli
+   git clone https://github.com/phoenix-ignite/phoenix-cli.git
+   cd phoenix-cli
+   npm install
+   npm run build
    ```
 
-   Or install it with:
+3. **Run Phoenix CLI:**
 
    ```bash
-   npm install -g @google/gemini-cli
+   npm start
    ```
 
-   Then, run the CLI from anywhere:
+   Or install globally:
 
    ```bash
-   gemini
+   npm install -g .
+   phoenix
    ```
 
-3. **Pick a color theme**
-4. **Authenticate:** When prompted, sign in with your personal Google account. This will grant you up to 60 model requests per minute and 1,000 model requests per day using Gemini.
+4. **Pick a color theme**
+5. **Authenticate:** When prompted, sign in with your personal Google account for API access.
 
-You are now ready to use the Gemini CLI!
+You are now ready to use Phoenix CLI!
 
 ### Use a Gemini API key:
 
-The Gemini API provides a free tier with [100 requests per day](https://ai.google.dev/gemini-api/docs/rate-limits#free-tier) using Gemini 2.5 Pro, control over which model you use, and access to higher rate limits (with a paid plan):
+Phoenix CLI uses the same API authentication as the original Gemini CLI:
 
 1. Generate a key from [Google AI Studio](https://aistudio.google.com/apikey).
-2. Set it as an environment variable in your terminal. Replace `YOUR_API_KEY` with your generated key.
+2. Set it as an environment variable:
 
    ```bash
    export GEMINI_API_KEY="YOUR_API_KEY"
    ```
 
-3. (Optionally) Upgrade your Gemini API project to a paid plan on the API key page (will automatically unlock [Tier 1 rate limits](https://ai.google.dev/gemini-api/docs/rate-limits#tier-1))
-
 ### Use a Vertex AI API key:
 
-The Vertex AI API provides a [free tier](https://cloud.google.com/vertex-ai/generative-ai/docs/start/express-mode/overview) using express mode for Gemini 2.5 Pro, control over which model you use, and access to higher rate limits with a billing account:
+Alternatively, use Vertex AI:
 
 1. Generate a key from [Google Cloud](https://cloud.google.com/vertex-ai/generative-ai/docs/start/api-keys).
-2. Set it as an environment variable in your terminal. Replace `YOUR_API_KEY` with your generated key and set GOOGLE_GENAI_USE_VERTEXAI to true
+2. Set environment variables:
 
    ```bash
    export GOOGLE_API_KEY="YOUR_API_KEY"
    export GOOGLE_GENAI_USE_VERTEXAI=true
    ```
 
-3. (Optionally) Add a billing account on your project to get access to [higher usage limits](https://cloud.google.com/vertex-ai/generative-ai/docs/quotas)
-
-For other authentication methods, including Google Workspace accounts, see the [authentication](./docs/cli/authentication.md) guide.
+For detailed authentication options, see the [authentication guide](./docs/cli/authentication.md).
 
 ## Examples
 
-Once the CLI is running, you can start interacting with Gemini from your shell.
+Once Phoenix CLI is running, you can start interacting with AI from your shell.
 
 You can start a project from a new directory:
 
 ```sh
 cd new-project/
-gemini
-> Write me a Gemini Discord bot that answers questions using a FAQ.md file I will provide
+phoenix
+> Write me a Discord bot that answers questions using a FAQ.md file I will provide
 ```
 
 Or work with an existing project:
 
 ```sh
-git clone https://github.com/google-gemini/gemini-cli
-cd gemini-cli
-gemini
+git clone https://github.com/phoenix-ignite/phoenix-cli
+cd phoenix-cli
+phoenix
 > Give me a summary of all of the changes that went in yesterday
 ```
 
@@ -111,7 +116,7 @@ having issues.
 
 ### Explore a new codebase
 
-Start by `cd`ing into an existing or newly-cloned repository and running `gemini`.
+Start by `cd`ing into an existing or newly-cloned repository and running `phoenix`.
 
 ```text
 > Describe the main pieces of this system's architecture.
@@ -157,6 +162,12 @@ Use MCP servers to integrate your local system tools with your enterprise collab
 
 Head over to the [Uninstall](docs/Uninstall.md) guide for uninstallation instructions.
 
+## About This Fork
+
+Phoenix CLI is a community-maintained fork of Google's Gemini CLI, created by [phoenix-ignite](https://github.com/phoenix-ignite) to address specific issues and provide enhanced functionality.
+
+**Original Project:** [google-gemini/gemini-cli](https://github.com/google-gemini/gemini-cli)
+
 ## Terms of Service and Privacy Notice
 
-For details on the terms of service and privacy notice applicable to your use of Gemini CLI, see the [Terms of Service and Privacy Notice](./docs/tos-privacy.md).
+For details on the terms of service and privacy notice, see the [Terms of Service and Privacy Notice](./docs/tos-privacy.md).

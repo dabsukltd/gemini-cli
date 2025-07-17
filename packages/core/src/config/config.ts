@@ -24,8 +24,8 @@ import { WebFetchTool } from '../tools/web-fetch.js';
 import { ReadManyFilesTool } from '../tools/read-many-files.js';
 import {
   MemoryTool,
-  setGeminiMdFilename,
-  GEMINI_CONFIG_DIR as GEMINI_DIR,
+  setPhoenixMdFilename,
+  PHOENIX_CONFIG_DIR as PHOENIX_DIR,
 } from '../tools/memoryTool.js';
 import { WebSearchTool } from '../tools/web-search.js';
 import { GeminiClient } from '../core/client.js';
@@ -126,7 +126,7 @@ export interface ConfigParameters {
   mcpServerCommand?: string;
   mcpServers?: Record<string, MCPServerConfig>;
   userMemory?: string;
-  geminiMdFileCount?: number;
+  phoenixMdFileCount?: number;
   approvalMode?: ApprovalMode;
   showMemoryUsage?: boolean;
   contextFileName?: string | string[];
@@ -169,13 +169,13 @@ export class Config {
   private readonly mcpServerCommand: string | undefined;
   private readonly mcpServers: Record<string, MCPServerConfig> | undefined;
   private userMemory: string;
-  private geminiMdFileCount: number;
+  private phoenixMdFileCount: number;
   private approvalMode: ApprovalMode;
   private readonly showMemoryUsage: boolean;
   private readonly accessibility: AccessibilitySettings;
   private readonly telemetrySettings: TelemetrySettings;
   private readonly usageStatisticsEnabled: boolean;
-  private geminiClient!: GeminiClient;
+  private phoenixClient!: GeminiClient;
   private readonly fileFiltering: {
     respectGitIgnore: boolean;
     enableRecursiveFileSearch: boolean;
@@ -216,7 +216,7 @@ export class Config {
     this.mcpServerCommand = params.mcpServerCommand;
     this.mcpServers = params.mcpServers;
     this.userMemory = params.userMemory ?? '';
-    this.geminiMdFileCount = params.geminiMdFileCount ?? 0;
+    this.phoenixMdFileCount = params.phoenixMdFileCount ?? 0;
     this.approvalMode = params.approvalMode ?? ApprovalMode.DEFAULT;
     this.showMemoryUsage = params.showMemoryUsage ?? false;
     this.accessibility = params.accessibility ?? {};
@@ -248,7 +248,7 @@ export class Config {
     this.ideMode = params.ideMode ?? false;
 
     if (params.contextFileName) {
-      setGeminiMdFilename(params.contextFileName);
+      setPhoenixMdFilename(params.contextFileName);
     }
 
     if (this.telemetrySettings.enabled) {
@@ -279,8 +279,8 @@ export class Config {
       authMethod,
     );
 
-    this.geminiClient = new GeminiClient(this);
-    await this.geminiClient.initialize(this.contentGeneratorConfig);
+    this.phoenixClient = new GeminiClient(this);
+    await this.phoenixClient.initialize(this.contentGeneratorConfig);
 
     // Reset the session flag since we're explicitly changing auth and using default model
     this.modelSwitchedDuringSession = false;
@@ -333,10 +333,10 @@ export class Config {
   }
 
   async getUserTier(): Promise<UserTierId | undefined> {
-    if (!this.geminiClient) {
+    if (!this.phoenixClient) {
       return undefined;
     }
-    const generator = this.geminiClient.getContentGenerator();
+    const generator = this.phoenixClient.getContentGenerator();
     return await generator.getTier?.();
   }
 
@@ -404,11 +404,11 @@ export class Config {
   }
 
   getGeminiMdFileCount(): number {
-    return this.geminiMdFileCount;
+    return this.phoenixMdFileCount;
   }
 
   setGeminiMdFileCount(count: number): void {
-    this.geminiMdFileCount = count;
+    this.phoenixMdFileCount = count;
   }
 
   getApprovalMode(): ApprovalMode {
@@ -444,11 +444,11 @@ export class Config {
   }
 
   getGeminiClient(): GeminiClient {
-    return this.geminiClient;
+    return this.phoenixClient;
   }
 
   getGeminiDir(): string {
-    return path.join(this.targetDir, GEMINI_DIR);
+    return path.join(this.targetDir, PHOENIX_DIR);
   }
 
   getProjectTempDir(): string {

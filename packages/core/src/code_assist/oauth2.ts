@@ -53,7 +53,7 @@ const SIGN_IN_SUCCESS_URL =
 const SIGN_IN_FAILURE_URL =
   'https://developers.google.com/gemini-code-assist/auth_failure_gemini';
 
-const GEMINI_DIR = '.gemini';
+const PHOENIX_DIR = '.phoenix';
 const CREDENTIAL_FILENAME = 'oauth_creds.json';
 
 /**
@@ -318,7 +318,7 @@ async function cacheCredentials(credentials: Credentials) {
 }
 
 function getCachedCredentialPath(): string {
-  return path.join(os.homedir(), GEMINI_DIR, CREDENTIAL_FILENAME);
+  return path.join(os.homedir(), PHOENIX_DIR, CREDENTIAL_FILENAME);
 }
 
 export async function clearCachedCredentialFile() {

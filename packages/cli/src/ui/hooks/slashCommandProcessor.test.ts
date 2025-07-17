@@ -67,7 +67,7 @@ import {
 import open from 'open';
 import { useSlashCommandProcessor } from './slashCommandProcessor.js';
 import { SlashCommandProcessorResult } from '../types.js';
-import { Config, GeminiClient } from '@google/gemini-cli-core';
+import { Config, GeminiClient } from '@phoenix-ignite/phoenix-cli-core';
 import { useSessionStats } from '../contexts/SessionContext.js';
 import { LoadedSettings } from '../../config/settings.js';
 import * as ShowMemoryCommandModule from './useShowMemoryCommand.js';
@@ -90,9 +90,9 @@ vi.mock('open', () => ({
   default: vi.fn(),
 }));
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@phoenix-ignite/phoenix-cli-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+    await importOriginal<typeof import('@phoenix-ignite/phoenix-cli-core')>();
   return {
     ...actual,
   };
@@ -180,7 +180,7 @@ describe('useSlashCommandProcessor', () => {
   const getProcessorHook = () => {
     const settings = {
       merged: {
-        contextFileName: 'GEMINI.md',
+        contextFileName: 'PHOENIX.md',
       },
     } as unknown as LoadedSettings;
     return renderHook(() =>

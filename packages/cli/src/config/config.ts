@@ -10,8 +10,8 @@ import process from 'node:process';
 import {
   Config,
   loadServerHierarchicalMemory,
-  setGeminiMdFilename as setServerGeminiMdFilename,
-  getCurrentGeminiMdFilename,
+  setPhoenixMdFilename as setServerGeminiMdFilename,
+  getCurrentPhoenixMdFilename,
   ApprovalMode,
   DEFAULT_GEMINI_MODEL,
   DEFAULT_GEMINI_EMBEDDING_MODEL,
@@ -19,7 +19,7 @@ import {
   TelemetryTarget,
   MCPServerConfig,
   IDE_SERVER_NAME,
-} from '@google/gemini-cli-core';
+} from '@phoenix-ignite/phoenix-cli-core';
 import { Settings } from './settings.js';
 
 import { Extension, filterActiveExtensions } from './extension.js';
@@ -249,13 +249,13 @@ export async function loadCliConfig(
 
   // Set the context filename in the server's memoryTool module BEFORE loading memory
   // TODO(b/343434939): This is a bit of a hack. The contextFileName should ideally be passed
-  // directly to the Config constructor in core, and have core handle setGeminiMdFilename.
+  // directly to the Config constructor in core, and have core handle setPhoenixMdFilename.
   // However, loadHierarchicalGeminiMemory is called *before* createServerConfig.
   if (settings.contextFileName) {
     setServerGeminiMdFilename(settings.contextFileName);
   } else {
     // Reset to default if not provided in settings.
-    setServerGeminiMdFilename(getCurrentGeminiMdFilename());
+    setServerGeminiMdFilename(getCurrentPhoenixMdFilename());
   }
 
   const extensionContextFilePaths = activeExtensions.flatMap(
@@ -311,7 +311,7 @@ export async function loadCliConfig(
         `Ignoring user-defined MCP server config for "${IDE_SERVER_NAME}" as it is a reserved name.`,
       );
     }
-    const companionPort = process.env.GEMINI_CLI_IDE_SERVER_PORT;
+    const companionPort = process.env.PHOENIX_CLI_IDE_SERVER_PORT;
     if (!companionPort) {
       throw new Error(
         'Could not connect to IDE. Make sure you have the companion VS Code extension installed from the marketplace or via /ide install.',
@@ -352,7 +352,7 @@ export async function loadCliConfig(
     mcpServerCommand: settings.mcpServerCommand,
     mcpServers,
     userMemory: memoryContent,
-    geminiMdFileCount: fileCount,
+    phoenixMdFileCount: fileCount,
     approvalMode: argv.yolo || false ? ApprovalMode.YOLO : ApprovalMode.DEFAULT,
     showMemoryUsage:
       argv.showMemoryUsage ||
